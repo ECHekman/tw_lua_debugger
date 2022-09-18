@@ -1,0 +1,1 @@
+mklink /j %USERPROFILE%\.vscode\extensions\devCAT.lua-debug-1.1.1 %~dp0

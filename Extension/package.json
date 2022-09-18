@@ -1,0 +1,150 @@
+{
+	"name": "tw-lua-debug",
+	"displayName": "TW Lua Debugger",
+	"version": "1.1.1",
+	"publisher": "Fietspompje",
+	"icon": "images/icon.png",
+	"description": "Visual Studio Code debugger extension for Total War Warhammer 3 Lua 5.1",
+	"categories": [
+		"Debuggers"
+	],
+	"author": {
+		"name": "Fietspompje"
+	},
+	"license": "MIT",
+	"private": true,
+	"scripts": {},
+	"engines": {
+		"vscode": "^1.0.0"
+	},
+	"dependencies": {},
+	"devDependencies": {},
+	"contributes": {
+		"breakpoints": [
+			{
+			  "language": "lua"
+			}
+		],
+		"debuggers": [
+			{
+				"type": "lua",
+				"label": "TW Lua Debugger",
+				"enableBreakpointsFor": {
+					"languageIds": [
+						"lua"
+					]
+				},
+				"program": "./DebugAdapter.exe",
+				"osx": {
+					"runtime": "mono"
+				},
+				"linux": {
+					"runtime": "mono"
+				},
+				"initialConfigurations": [
+					{
+						"name": "tw-launch-lua",
+						"type": "lua",
+						"request": "launch",
+						"workingDirectory": "${workspaceRoot}",
+						"sourceBasePath": "${workspaceRoot}",
+						"executable": "${workspaceRoot}/warhammer3.exe",
+						"arguments": "used_mods.txt",
+						"encoding": "UTF-8",
+						"env": {}
+					},
+					{
+						"name": "tw-wait",
+						"type": "lua",
+						"request": "attach",
+						"workingDirectory": "${workspaceRoot}",
+						"sourceBasePath": "${workspaceRoot}",
+						"encoding": "UTF-8"
+					}
+				],
+				"configurationAttributes": {
+					"launch": {
+						"required": [
+							"name",
+							"type",
+							"request",
+							"workingDirectory",
+							"listenPublicly",
+							"listenPort"
+						],
+						"properties": {
+							"workingDirectory": {
+								"type": "string",
+								"description": "Working directory",
+								"default": "${workspaceRoot}"
+							},
+							"sourceBasePath": {
+								"type": "string",
+								"description": "Base path of lua source files",
+								"default": "${workspaceRoot}"
+							},
+							"executable": {
+								"type": "string",
+								"description": "An exe file to launch",
+								"default": "${workspaceRoot}/warhammer3.exe"
+							},
+							"arguments": {
+								"type": "string",
+								"description": "Command line arguments for executable",
+								"default": "main.lua"
+							},
+							"env": {
+								"type": "object",
+								"description": "Environment variables for executable",
+								"default": {}
+							},
+							"encoding": {
+								"type": "string",
+								"description": "Encoding of the debuggee. (Example: 'UTF-8', '949')",
+								"default": "UTF-8"
+							}
+						}
+					},
+					"attach": {
+						"required": [
+							"name",
+							"type",
+							"request",
+							"workingDirectory",
+							"listenPublicly",
+							"listenPort"
+						],
+						"properties": {
+							"workingDirectory": {
+								"type": "string",
+								"description": "Working directory",
+								"default": "${workspaceRoot}"
+							},
+							"sourceBasePath": {
+								"type": "string",
+								"description": "Base path of lua source files",
+								"default": "${workspaceRoot}"
+							},
+							"encoding": {
+								"type": "string",
+								"description": "Encoding of the debuggee. (Example: 'UTF-8', '949')",
+								"default": "UTF-8"
+							}
+						}
+					}
+				}
+			}
+		]
+	},
+	"__metadata": {
+		"id": "b87f2c47-3ca7-4670-96c2-aacbfc29418f",
+		"publisherId": "2542512f-25a6-445f-b93c-efd48a98a7d7",
+		"publisherDisplayName": "devCAT",
+		"targetPlatform": "undefined",
+		"isApplicationScoped": false,
+		"updated": false,
+		"isPreReleaseVersion": false,
+		"preRelease": false,
+		"installedTimestamp": 1662655324443
+	}
+}
