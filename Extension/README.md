@@ -3,7 +3,7 @@ This is the rough beta for my Total War Warhammer3 lua debugger.
 
 # Requirements
 - RFPM: https://github.com/Frodo45127/rpfm
-- vscode
+- Mod: 
 
 # Setup
 1. Download the lua debugger tools from steam workshop and activate them
@@ -35,9 +35,9 @@ In VSCode, go to the Run and Debug page (ctrl+shift+d) and add the following new
 
 4. Lua files
 In order to debug lua files, you need to extract them from the packfile they are in, and place them in the "sourceBasePath". 
-sourceBasePath defaults to the vscode workspace directory which would be "C:\..\steamapps\common\Total War WARHAMMER III" 
+sourceBasePath defaults to the vscode workspace directory which defaults to be "C:\..\steamapps\common\Total War WARHAMMER III" in the config
 
-For example you want to debug the warhammer3 lua files in data.pack
+For example you want to debug the warhammer3 CA lua files in data.pack
 - Open "C:\..\steamapps\common\Total War WARHAMMER III/data/data.pack" in RFPM
 - Richt-click the "script" folder and extract the folder to "sourceBasePath" folder. Default is: ("C:\..\steamapps\common\Total War WARHAMMER III\")
 
@@ -58,7 +58,7 @@ For example you want to debug the warhammer3 lua files in data.pack
 - Pausing does not work during load screens
 - Disconnecting and reconnecting the debugger from vscode is not advised, but seems to work. 
 
-# Future featires
+# Future features
 - Source file extraction from used packfiles directly
 - Break on error
 

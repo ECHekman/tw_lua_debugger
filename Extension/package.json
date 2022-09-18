@@ -18,11 +18,15 @@
 		"vscode": "^1.0.0"
 	},
 	"dependencies": {},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ECHekman/tw_lua_debugger.git"
+	},
 	"devDependencies": {},
 	"contributes": {
 		"breakpoints": [
 			{
-			  "language": "lua"
+				"language": "lua"
 			}
 		],
 		"debuggers": [
@@ -136,15 +140,5 @@
 			}
 		]
 	},
-	"__metadata": {
-		"id": "b87f2c47-3ca7-4670-96c2-aacbfc29418f",
-		"publisherId": "2542512f-25a6-445f-b93c-efd48a98a7d7",
-		"publisherDisplayName": "devCAT",
-		"targetPlatform": "undefined",
-		"isApplicationScoped": false,
-		"updated": false,
-		"isPreReleaseVersion": false,
-		"preRelease": false,
-		"installedTimestamp": 1662655324443
-	}
+	"__metadata": {}
 }
