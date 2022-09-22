@@ -35,6 +35,7 @@ namespace VSCodeDebug
         public IDebuggeeSender toDebuggee;
         Process process;
 
+        string executableDirectory;
         string workingDirectory;
         string sourceBasePath;
         Tuple<string, int> fakeBreakpointMode = null;
@@ -224,6 +225,7 @@ namespace VSCodeDebug
                 return;
             }
             var runtimeExecutableFull = GetFullPath(runtimeExecutable);
+            executableDirectory = Path.GetDirectoryName(runtimeExecutableFull);
             if (runtimeExecutableFull == null)
             {
                 SendErrorResponse(command, seq, 3006, "Runtime executable '{path}' does not exist.", new { path = runtimeExecutable });
@@ -324,7 +326,7 @@ namespace VSCodeDebug
             var ncom = new DebuggeeProtocol(
                 this,
                 encoding,
-                sourceBasePath);
+                executableDirectory);
             this.startCommand = command;
             this.startSeq = seq;
             ncom.StartThread();
@@ -334,6 +336,18 @@ namespace VSCodeDebug
         {
             workingDirectory = (string)args.workingDirectory;
             if (workingDirectory == null) { workingDirectory = ""; }
+
+            var runtimeExecutable = (string)args.executable;
+            if (runtimeExecutable == null) { runtimeExecutable = ""; }
+
+            runtimeExecutable = runtimeExecutable.Trim();
+            if (runtimeExecutable.Length == 0)
+            {
+                SendErrorResponse(command, seq, 3005, "Property 'executable' is empty.");
+                return false;
+            }
+            var runtimeExecutableFull = GetFullPath(runtimeExecutable);
+            executableDirectory = Path.GetDirectoryName(runtimeExecutableFull);
 
             workingDirectory = workingDirectory.Trim();
             if (workingDirectory.Length == 0)
@@ -413,7 +427,7 @@ namespace VSCodeDebug
                     var ncom = new DebuggeeProtocol(
                         this,
                         encoding,
-                        sourceBasePath);
+                        executableDirectory);
 
                     ncom.StartThread();
                 }

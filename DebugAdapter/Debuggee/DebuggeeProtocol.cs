@@ -8,7 +8,6 @@ namespace VSCodeDebug
     class DebuggeeProtocol : IDebuggeeSender
     {
         IDebuggeeListener debuggeeListener;
-        NetworkStream networkStream;
 
         string sourceBasePath;
 
@@ -31,7 +30,7 @@ namespace VSCodeDebug
             string topath = sourceBasePath + "\\" + "debug_read";
 
 
-            File.WriteAllText(topath, string.Empty);
+            
 
             try
             {
@@ -51,17 +50,23 @@ namespace VSCodeDebug
                 //Dont care
             }
 
+            // Debuggee is active
             if (fromDebuggeeStream == null)
             {
                 fromDebuggeeStream = File.OpenRead(frompath);
+                toDebuggeeStream = File.Open(topath, FileMode.Append, FileAccess.Write, FileShare.Read);
             }
-            toDebuggeeStream = File.Open(topath, FileMode.Open, FileAccess.Write, FileShare.Read);
+            else // Debuggee is inactive
+            {
+                File.WriteAllText(topath, string.Empty);
+                toDebuggeeStream = File.Open(topath, FileMode.Open, FileAccess.Write, FileShare.Read);                
+            }
         }
 
         ~DebuggeeProtocol()
         {
-            string topath = sourceBasePath + "\\" + "debug_read";
-            File.WriteAllText(topath, string.Empty);
+            //string topath = sourceBasePath + "\\" + "debug_read";
+            //File.WriteAllText(topath, string.Empty);
         }
 
         public void StartThread()

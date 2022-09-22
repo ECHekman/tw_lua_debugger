@@ -1,7 +1,7 @@
 {
 	"name": "tw-lua-debug",
 	"displayName": "TW Lua Debugger",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"publisher": "Fietspompje",
 	"icon": "images/icon.png",
 	"description": "Visual Studio Code debugger extension for Total War Warhammer 3 Lua 5.1",
@@ -62,6 +62,7 @@
 						"type": "lua",
 						"request": "attach",
 						"workingDirectory": "${workspaceRoot}",
+						"executable": "${workspaceRoot}/warhammer3.exe",
 						"sourceBasePath": "${workspaceRoot}",
 						"encoding": "UTF-8"
 					}

@@ -3,7 +3,7 @@ This is the rough beta for my Total War Warhammer3 lua debugger.
 
 # Requirements
 - RFPM: https://github.com/Frodo45127/rpfm
-- Mod: 
+- Mod: https://steamcommunity.com/sharedfiles/filedetails/?id=2864762290
 
 # Setup
 1. Download the lua debugger tools from steam workshop and activate them
@@ -58,7 +58,7 @@ For example you want to debug the warhammer3 CA lua files in data.pack
 - Pausing does not work during load screens
 - Disconnecting and reconnecting the debugger from vscode is not advised, but seems to work. 
 
-# Future features
+# Upcomming Features
 - Source file extraction from used packfiles directly
 - Break on error
 
