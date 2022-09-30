@@ -111,7 +111,6 @@
   -->
   <Target Name="AfterBuild">
     <Copy SourceFiles="$(OutputPath)\Newtonsoft.Json.dll" DestinationFolder="$(MSBuildProjectDirectory)\..\Extension" />
-    <Copy SourceFiles="$(OutputPath)\GiderosPlayerRemote.dll" DestinationFolder="$(MSBuildProjectDirectory)\..\Extension" />
     <Copy SourceFiles="$(OutputPath)\DebugAdapter.exe" DestinationFolder="$(MSBuildProjectDirectory)\..\Extension" />
   </Target>
 </Project>
