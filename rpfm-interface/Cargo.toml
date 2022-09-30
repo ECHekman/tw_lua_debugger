@@ -1,0 +1,17 @@
+[package]
+name = "rpfm-interface"
+version = "0.0.1"
+authors = [ "Fietspompje" ]
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+napi = "2"
+napi-derive = "2"
+
+rpfm_lib = { git = "https://github.com/Frodo45127/rpfm" }
+
+[build-dependencies]
+napi-build = "1"

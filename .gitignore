@@ -19,3 +19,7 @@ Extension/*.exe
 *.opendb
 .vs
 .tmp
+Extension/node_modules/
+
+rpfm-interface/target
+rpfm-interface/node_modules
