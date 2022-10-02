@@ -236,11 +236,15 @@ namespace VSCodeDebug
             if (!ReadBasicConfiguration(command, seq, args)) { return; }
 
             //--------------------------------
+
             var arguments = (string)args.arguments;
             if (arguments == null) { arguments = ""; }
 
-            // validate argument 'env'
-            Dictionary<string, string> env = null;
+            var modlistfile = (string)args.modListFile;
+            if (modlistfile != null) { arguments = modlistfile + " " + arguments; }
+
+                // validate argument 'env'
+                Dictionary<string, string> env = null;
             var environmentVariables = args.env;
             if (environmentVariables != null)
             {
@@ -259,9 +263,12 @@ namespace VSCodeDebug
             process.StartInfo.CreateNoWindow = false;
             process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
             process.StartInfo.UseShellExecute = true;
-            process.StartInfo.WorkingDirectory = workingDirectory;
+            process.StartInfo.WorkingDirectory = executableDirectory;
             process.StartInfo.FileName = runtimeExecutableFull;
             process.StartInfo.Arguments = arguments;
+
+            string currentDir = Directory.GetCurrentDirectory();
+            Directory.SetCurrentDirectory(executableDirectory);
 
             process.EnableRaisingEvents = true;
             process.Exited += (object sender, EventArgs e) =>
@@ -286,6 +293,7 @@ namespace VSCodeDebug
             try
             {
                 process.Start();
+                Directory.SetCurrentDirectory(currentDir);
             }
             catch (Exception e)
             {
@@ -350,16 +358,22 @@ namespace VSCodeDebug
             executableDirectory = Path.GetDirectoryName(runtimeExecutableFull);
 
             workingDirectory = workingDirectory.Trim();
+            
+            /*
             if (workingDirectory.Length == 0)
             {
                 SendErrorResponse(command, seq, 3003, "Property 'workingDirectory' is empty.");
                 return false;
             }
+            */
+
+            /*
             if (!Directory.Exists(workingDirectory))
             {
                 SendErrorResponse(command, seq, 3004, "Working directory '{path}' does not exist.", new { path = workingDirectory });
                 return false;
             }
+            */
 
             if (args.sourceBasePath != null)
             {
@@ -383,12 +397,12 @@ namespace VSCodeDebug
                 Program.WaitingUI.BeginInvoke(new Action(() => {
                     Program.WaitingUI.Hide();
                 }));
-                
+
                 var welcome = new
                 {
                     command = "welcome",
                     sourceBasePath = sourceBasePath,
-                    directorySeperator = Path.DirectorySeparatorChar,
+                    directorySeperator = "/"// Path.DirectorySeparatorChar,
                 };
                 toDebuggee.Send(JsonConvert.SerializeObject(welcome));
 

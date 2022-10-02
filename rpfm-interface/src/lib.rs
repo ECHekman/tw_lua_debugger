@@ -10,6 +10,7 @@ extern crate napi_derive;
 use std::path::{PathBuf, Path};
 
 use rpfm_lib::packfile::PackFile;
+use rpfm_lib::packedfile::DecodedPackedFile;
 use rpfm_lib::packedfile::text::{Text, TextType};
 use rpfm_lib::packedfile::PackedFileType;
 
@@ -62,19 +63,18 @@ impl PackFileHolder
 
         return files_vec;
     }
-}
 
-
-// General interface
-#[napi]
-impl PackFileHolder
-{
-    pub fn get_text_file(&mut self, filepath: String ) -> &str
+    #[napi]
+    pub fn get_text_file(&mut self, filepath: String) -> String
     {    
-        return "test";
+        let splits = filepath.split('/').map(str::to_string).collect::<Vec<String>>();
+
+        match self.owned_packfile.get_packed_file_by_path(&splits) {        
+            Some(mut x) => match x.decode_return_ref().unwrap_or(&DecodedPackedFile::Unknown) { 
+                DecodedPackedFile::Text(data) => return String::from(data.get_ref_contents()),
+                _ => return "Text Not Found One".to_string()
+            },
+            None => return "Text Not Found Two".to_string()
+        }
     }
 }
-
-
-
-

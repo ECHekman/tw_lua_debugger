@@ -112,6 +112,7 @@ namespace VSCodeDebug
 
 		private void Dispatch(string reqText)
 		{
+			reqText = reqText.Replace("\\\\", "/"); //Replace paths
 			var request = JsonConvert.DeserializeObject<Request>(reqText);
 			if (request != null && request.type == "request")
             {

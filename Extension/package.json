@@ -1,29 +1,93 @@
 {
-	"name": "tw-lua-debug",
+	"name": "twdev",
 	"displayName": "TW Lua Debugger",
-	"version": "1.1.2",
+	"version": "1.1.3",
 	"publisher": "Fietspompje",
 	"icon": "images/icon.png",
 	"description": "Visual Studio Code debugger extension for Total War Warhammer 3 Lua 5.1",
 	"categories": [
-		"Debuggers"
+		"Debuggers",
+		"Other"
 	],
+	"activationEvents": [
+		"onDebug",
+		"workspaceContains:twsource",
+		"onLanguage:lua",
+		"onFileSystem:twsource",
+		"onCommand:twdev.helloWorld",
+		"onCommand:twdev.sourceFiles"
+	  ],
 	"author": {
 		"name": "Fietspompje"
 	},
-	"license": "MIT",
-	"private": true,
-	"scripts": {},
-	"engines": {
-		"vscode": "^1.0.0"
+	"main": "./out/extension.js",
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile && npm run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js"
 	},
-	"dependencies": {},
+	"engines": {
+		"vscode": "^1.71.0"
+	},
+	"dependencies": {
+		"napi-rs": "^0.3.10",
+		"rpfm-interface": "../rpfm-interface"
+	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/ECHekman/tw_lua_debugger.git"
 	},
-	"devDependencies": {},
+	"devDependencies": {
+		"@types/glob": "^7.2.0",
+		"@types/mocha": "^9.1.1",
+		"@types/node": "16.x",
+		"@types/vscode": "^1.71.0",
+		"@typescript-eslint/eslint-plugin": "^5.31.0",
+		"@typescript-eslint/parser": "^5.31.0",
+		"@vscode/test-electron": "^2.1.5",
+		"eslint": "^8.20.0",
+		"glob": "^8.0.3",
+		"mocha": "^10.0.0",
+		"typescript": "^4.7.4"
+	},
 	"contributes": {
+		"commands": [
+			{
+			  "command": "twdev.helloWorld",
+			  "title": "Hello World"			  
+			},
+			{
+				"command": "twdev.sourceFiles",
+				"title": "Create Live Source Files for Total War",
+				"category": "TotalWar"
+			}
+		],
+		"taskDefinitions": [
+			{
+				"type": "initVirtualSourceFiles",
+				"properties": {
+					"modListFile": {
+						"type": "string",
+						"description": "A text file that contains all the used mods and their directories. If not set this is taken from the launch.json configuration. Usually is used_mods.txt"
+					}
+				}
+			}
+		],
+		"configuration": 
+		{
+			"id": "VirtualSource",
+			"title": "Virtual Source File Settings",
+			"properties": {
+				"twdev.modListFileLocation": 
+				{
+					"type": "string",
+					"description": "Used for retreiving the lua files from packs for the virtual TW source directory"					
+				}
+			}
+		},
 		"breakpoints": [
 			{
 				"language": "lua"
@@ -33,11 +97,6 @@
 			{
 				"type": "lua",
 				"label": "TW Lua Debugger",
-				"enableBreakpointsFor": {
-					"languageIds": [
-						"lua"
-					]
-				},
 				"program": "./DebugAdapter.exe",
 				"osx": {
 					"runtime": "mono"
@@ -51,19 +110,18 @@
 						"type": "lua",
 						"request": "launch",
 						"workingDirectory": "${workspaceRoot}",
-						"sourceBasePath": "${workspaceRoot}",
-						"executable": "${workspaceRoot}/warhammer3.exe",
-						"arguments": "used_mods.txt",
+						"executable": "<path to warhammer3>/warhammer3.exe",
+						"modListFile": "used_mods.txt",
 						"encoding": "UTF-8",
-						"env": {}
+						"env": {}						
 					},
 					{
 						"name": "tw-wait",
 						"type": "lua",
 						"request": "attach",
 						"workingDirectory": "${workspaceRoot}",
-						"executable": "${workspaceRoot}/warhammer3.exe",
-						"sourceBasePath": "${workspaceRoot}",
+						"executable": "<path to warhammer3>/warhammer3.exe",
+						"modListFile": "used_mods.txt",
 						"encoding": "UTF-8"
 					}
 				],
@@ -74,18 +132,13 @@
 							"type",
 							"request",
 							"workingDirectory",
-							"listenPublicly",
-							"listenPort"
+							"executable",
+							"modListFile"
 						],
 						"properties": {
 							"workingDirectory": {
 								"type": "string",
 								"description": "Working directory",
-								"default": "${workspaceRoot}"
-							},
-							"sourceBasePath": {
-								"type": "string",
-								"description": "Base path of lua source files",
 								"default": "${workspaceRoot}"
 							},
 							"executable": {
@@ -96,7 +149,12 @@
 							"arguments": {
 								"type": "string",
 								"description": "Command line arguments for executable",
-								"default": "main.lua"
+								"default": ""
+							},
+							"modListFile": {
+								"type": "string",
+								"description": "text file that contains the used mods and their directories. Defaults to the default used_mods.txt.",
+								"default": "used_mods.txt"
 							},
 							"env": {
 								"type": "object",
@@ -116,8 +174,8 @@
 							"type",
 							"request",
 							"workingDirectory",
-							"listenPublicly",
-							"listenPort"
+							"executable",
+							"modListFile"
 						],
 						"properties": {
 							"workingDirectory": {
@@ -125,10 +183,25 @@
 								"description": "Working directory",
 								"default": "${workspaceRoot}"
 							},
-							"sourceBasePath": {
+							"executable": {
 								"type": "string",
-								"description": "Base path of lua source files",
-								"default": "${workspaceRoot}"
+								"description": "An exe file to launch",
+								"default": "${workspaceRoot}/warhammer3.exe"
+							},
+							"arguments": {
+								"type": "string",
+								"description": "Command line arguments for executable",
+								"default": ""
+							},
+							"modListFile": {
+								"type": "string",
+								"description": "text file that contains the used mods and their directories. Defaults to the default used_mods.txt.",
+								"default": "used_mods.txt"
+							},
+							"env": {
+								"type": "object",
+								"description": "Environment variables for executable",
+								"default": {}
 							},
 							"encoding": {
 								"type": "string",

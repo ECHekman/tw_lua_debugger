@@ -6,5 +6,5 @@
 export function openPackFiles(paths: Array<string>, useLazyLoading: boolean, ignoreMods: boolean, lockPackfile: boolean): PackFileHolder
 export class PackFileHolder {
   getAllLuaFilePaths(): Array<string>
-  
+  getTextFile(filepath: string): string
 }
