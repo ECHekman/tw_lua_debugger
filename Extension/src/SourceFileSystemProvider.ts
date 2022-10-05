@@ -9,6 +9,7 @@ import { openPackFiles } from 'rpfm-interface';
 import { PackFileHolder } from 'rpfm-interface';
 
 import { TextEncoder } from 'util';
+import { dirname } from 'path';
 
 const rustLib = require('rpfm-interface');
 const readline = require('readline');
@@ -62,13 +63,14 @@ export class LiveSourceFS implements vscode.FileSystemProvider {
             } 
 
             let modlistfile = path.join(exeDirectory, modfile);
-            vscode.workspace.getConfiguration().update("twdev.modListFileLocation", modlistfile);
+            vscode.workspace.getConfiguration().update("twdev.modListFileLocation", modlistfile, vscode.ConfigurationTarget.Global);
             this.updateSourceFilesForDebugConfig(modlistfile);
         });
 
         if(vscode.workspace.getConfiguration().has("twdev.modListFileLocation"))
         {
-            let location = vscode.workspace.getConfiguration('twdev').get<string>("modListFileLocation");
+            let conf = vscode.workspace.getConfiguration();
+            let location = vscode.workspace.getConfiguration().get<string>("twdev.modListFileLocation");
             
             if(location !== undefined)
             {
@@ -78,13 +80,13 @@ export class LiveSourceFS implements vscode.FileSystemProvider {
 
     }
 
-    
-
 
     async updateSourceFilesForDebugConfig(modlistfile: string): Promise<void> {
 
+        modlistfile = modlistfile.replace(";", "");
         if(fs.existsSync(modlistfile) === false)
         {
+            vscode.window.showWarningMessage("Could update TW Virtual Source Files because was unable to find the modlistfile at: " + modlistfile);
             return;
         }
         
@@ -157,28 +159,17 @@ export class LiveSourceFS implements vscode.FileSystemProvider {
         {
             this.fileList = this.packfiles.getAllLuaFilePaths();
         }
-    }
-    
-/*
-    updateSourceFiles(modlist: string): void {
-
-        if(vscode.workspace.workspaceFolders)
+        
+        if(this.fileList.length > 0)
         {
-            let wf = vscode.workspace.workspaceFolders[0];
-            const config = vscode.workspace.getConfiguration('launch', wf.uri);
-            const configurations = config.get<any[]>("configurations");
-
-            if (!configurations) {
-                return;
-            }
-            
-            configurations.forEach((c) => {
-              // read or modify the config
-              
+            let pointlessuri : vscode.Uri = vscode.Uri.parse("twsource:/" + this.fileList.at(0));
+            this.fileList.forEach(element => {
+                let pointlessuri : vscode.Uri = vscode.Uri.parse("twsource:/" + element);
+                this._bufferedEvents.push({ type: vscode.FileChangeType.Changed, uri: pointlessuri });
             });
+            this._fireSoon({ type: vscode.FileChangeType.Changed, uri: pointlessuri });
         }
     }
-*/
 
     stat(uri: vscode.Uri): vscode.FileStat {
         if(uri.scheme !== 'twsource')
@@ -191,7 +182,7 @@ export class LiveSourceFS implements vscode.FileSystemProvider {
         {
             if(vscode.workspace.getConfiguration().has("twdev.modListFileLocation"))
             {
-                let location = vscode.workspace.getConfiguration('twdev').get<string>("modListFileLocation");
+                let location = vscode.workspace.getConfiguration().get<string>("twdev.modListFileLocation");
                 
                 if(location !== undefined)
                 {
@@ -304,9 +295,22 @@ export class LiveSourceFS implements vscode.FileSystemProvider {
     private _fireSoonHandle?: NodeJS.Timer;
     readonly onDidChangeFile: vscode.Event<vscode.FileChangeEvent[]> = this._emitter.event;
    
+    private _fireSoon(...events: vscode.FileChangeEvent[]): void {
+        this._bufferedEvents.push(...events);
+
+        if (this._fireSoonHandle) {
+            clearTimeout(this._fireSoonHandle);
+        }
+
+        this._fireSoonHandle = setTimeout(() => {
+            this._emitter.fire(this._bufferedEvents);
+            this._bufferedEvents.length = 0;
+        }, 5);
+    }
+
     watch(_resource: vscode.Uri): vscode.Disposable {
         // ignore, fires for all changes...
         return new vscode.Disposable(() => { });
     }
-}
 
+}

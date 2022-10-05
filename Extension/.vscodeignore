@@ -1,1 +1,5 @@
 install.bat
+/node_modules/rpfm-interface/node_modules/*
+node_modules/rpfm-interface/node_modules/*
+/node_modules/rpfm-interface/node_modules/**
+node_modules/rpfm-interface/node_modules/**

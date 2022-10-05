@@ -8,9 +8,8 @@
             "name": "tw-launch-lua",
             "type": "lua",
             "request": "launch",
-            "workingDirectory": "twsource:/",
             "executable": "C:/Games/steamapps/common/Total War WARHAMMER III/warhammer3.exe",
-            "arguments": "",
+            "arguments": "game_startup_mode campaign_load \"Knights of Caledor.643590582460.save\"; ",
             "modListFile": "used_mods.txt",
             "encoding": "UTF-8",
             "env": {}
@@ -19,7 +18,6 @@
             "name": "tw-wait",
             "type": "lua",
             "request": "attach",
-            "workingDirectory": "twsource:/",
             "executable": "C:/Games/steamapps/common/Total War WARHAMMER III/warhammer3.exe",
             "modListFile": "used_mods.txt",
             "encoding": "UTF-8"

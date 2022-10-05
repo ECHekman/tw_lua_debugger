@@ -1,7 +1,7 @@
 {
-	"name": "twdev",
+	"name": "tw-lua-debug",
 	"displayName": "TW Lua Debugger",
-	"version": "1.1.3",
+	"version": "1.1.6",
 	"publisher": "Fietspompje",
 	"icon": "images/icon.png",
 	"description": "Visual Studio Code debugger extension for Total War Warhammer 3 Lua 5.1",
@@ -33,8 +33,7 @@
 		"vscode": "^1.71.0"
 	},
 	"dependencies": {
-		"napi-rs": "^0.3.10",
-		"rpfm-interface": "../rpfm-interface"
+		"rpfm-interface": "rpfm-interface/"
 	},
 	"repository": {
 		"type": "git",
@@ -106,10 +105,9 @@
 				},
 				"initialConfigurations": [
 					{
-						"name": "tw-launch-lua",
+						"name": "tw-launch",
 						"type": "lua",
 						"request": "launch",
-						"workingDirectory": "${workspaceRoot}",
 						"executable": "<path to warhammer3>/warhammer3.exe",
 						"modListFile": "used_mods.txt",
 						"encoding": "UTF-8",
@@ -119,7 +117,6 @@
 						"name": "tw-wait",
 						"type": "lua",
 						"request": "attach",
-						"workingDirectory": "${workspaceRoot}",
 						"executable": "<path to warhammer3>/warhammer3.exe",
 						"modListFile": "used_mods.txt",
 						"encoding": "UTF-8"
@@ -131,15 +128,14 @@
 							"name",
 							"type",
 							"request",
-							"workingDirectory",
 							"executable",
 							"modListFile"
 						],
 						"properties": {
-							"workingDirectory": {
+							"sourceFilesPath": {
 								"type": "string",
-								"description": "Working directory",
-								"default": "${workspaceRoot}"
+								"description": "Optional source file directory. Debugger will search for source files here before looking in the virtual source file directory.",
+								"default": "${workspaceRoot}/src"
 							},
 							"executable": {
 								"type": "string",
@@ -148,7 +144,7 @@
 							},
 							"arguments": {
 								"type": "string",
-								"description": "Command line arguments for executable",
+								"description": "Command line arguments for executable. Allows you to add arguments to skipt the frontend: \n Straight to campaign savefile example: game_startup_mode campaign_load \"Knights of Caledor.643590582460.save\";",
 								"default": ""
 							},
 							"modListFile": {
@@ -173,25 +169,19 @@
 							"name",
 							"type",
 							"request",
-							"workingDirectory",
 							"executable",
 							"modListFile"
 						],
 						"properties": {
-							"workingDirectory": {
+							"sourceFilesPath": {
 								"type": "string",
-								"description": "Working directory",
-								"default": "${workspaceRoot}"
+								"description": "Optional source file directory. Debugger will search for source files here before looking in the virtual source file directory.",
+								"default": "${workspaceRoot}/src"
 							},
 							"executable": {
 								"type": "string",
 								"description": "An exe file to launch",
 								"default": "${workspaceRoot}/warhammer3.exe"
-							},
-							"arguments": {
-								"type": "string",
-								"description": "Command line arguments for executable",
-								"default": ""
 							},
 							"modListFile": {
 								"type": "string",

@@ -241,10 +241,10 @@ namespace VSCodeDebug
             if (arguments == null) { arguments = ""; }
 
             var modlistfile = (string)args.modListFile;
-            if (modlistfile != null) { arguments = modlistfile + " " + arguments; }
+            if (modlistfile != null) { arguments = modlistfile + "; " + arguments; }
 
                 // validate argument 'env'
-                Dictionary<string, string> env = null;
+            Dictionary<string, string> env = null;
             var environmentVariables = args.env;
             if (environmentVariables != null)
             {
@@ -342,9 +342,6 @@ namespace VSCodeDebug
 
         bool ReadBasicConfiguration(string command, int seq, dynamic args)
         {
-            workingDirectory = (string)args.workingDirectory;
-            if (workingDirectory == null) { workingDirectory = ""; }
-
             var runtimeExecutable = (string)args.executable;
             if (runtimeExecutable == null) { runtimeExecutable = ""; }
 
@@ -357,31 +354,15 @@ namespace VSCodeDebug
             var runtimeExecutableFull = GetFullPath(runtimeExecutable);
             executableDirectory = Path.GetDirectoryName(runtimeExecutableFull);
 
-            workingDirectory = workingDirectory.Trim();
-            
-            /*
-            if (workingDirectory.Length == 0)
+            if (args.sourceFilesPath != null)
             {
-                SendErrorResponse(command, seq, 3003, "Property 'workingDirectory' is empty.");
-                return false;
-            }
-            */
-
-            /*
-            if (!Directory.Exists(workingDirectory))
-            {
-                SendErrorResponse(command, seq, 3004, "Working directory '{path}' does not exist.", new { path = workingDirectory });
-                return false;
-            }
-            */
-
-            if (args.sourceBasePath != null)
-            {
-                sourceBasePath = (string)args.sourceBasePath;
+                sourceBasePath = (string)args.sourceFilesPath;
+                sourceBasePath = sourceBasePath.Replace("\\", "/").Trim();
+                sourceBasePath = sourceBasePath.Replace("\\\\", "/").Trim(); // Fix path
             }
             else
             {
-                sourceBasePath = workingDirectory;
+                sourceBasePath = "";
             }
 
             return true;

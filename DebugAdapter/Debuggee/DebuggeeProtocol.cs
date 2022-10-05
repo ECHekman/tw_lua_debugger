@@ -30,8 +30,6 @@ namespace VSCodeDebug
             string topath = sourceBasePath + "\\" + "debug_read";
 
 
-            
-
             try
             {
                 File.WriteAllText(frompath, string.Empty);

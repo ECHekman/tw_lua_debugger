@@ -1,0 +1,18 @@
+{
+  "package": "rpfm-interface",
+  "name": "rpfm-interface",
+  "version": "0.0.0",
+  "main": "rpfm-interface.node",
+  "types": "rpfm-interface.d.ts",
+  "devDependencies": {
+    "@napi-rs/cli": "^2.11.4"
+  },
+  "napi": {
+    "name": "rpfm-interface"
+  },
+  "scripts": {
+    "artifacts": "napi artifacts --dist ./Extension/out/",
+    "build": "napi build --release  --dts rpfm-interface.d.ts",
+    "build:debug": "napi build"
+  }
+}
