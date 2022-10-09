@@ -5,8 +5,10 @@ import { fstat } from 'fs';
 import path = require('path');
 import { stringify } from 'querystring';
 import * as vscode from 'vscode';
-import { LiveSourceFS } from './SourceFileSystemProvider';
 import * as fs from 'node:fs';
+
+import { LiveSourceFS } from './SourceFileSystemProvider';
+import { PackTaskProvider } from './PackTaskProvider';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -52,7 +54,8 @@ export function activate(context: vscode.ExtensionContext) {
 		}
     }));
 
-
+	const disposable = vscode.tasks.registerTaskProvider('pack', new PackTaskProvider());
+	context.subscriptions.push(disposable);
 }
 
 // this method is called when your extension is deactivated

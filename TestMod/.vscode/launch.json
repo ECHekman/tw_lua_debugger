@@ -12,7 +12,8 @@
             "arguments": "game_startup_mode campaign_load \"Knights of Caledor.643590582460.save\"; ",
             "modListFile": "used_mods.txt",
             "encoding": "UTF-8",
-            "env": {}
+            "env": {},
+            "preLaunchTask": "PackMod"
         },
         {
             "name": "tw-wait",
